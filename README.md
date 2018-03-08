@@ -22,4 +22,4 @@ sudo systemctl daemon-reload
 - https://stackoverflow.com/questions/40113964/install-systemd-service-ansible
 - https://www.freedesktop.org/software/systemd/man/systemd.service.html
 - http://docs.ansible.com/ansible/latest/systemd_module.html
-
+- https://www.digitalocean.com/community/questions/convert-run-at-startup-script-from-upstart-to-systemd-for-ubuntu-16
