@@ -1,0 +1,27 @@
+---
+# Install a custom service
+- name: Download the package
+  get_url:
+    url: "{{ custom_service_pkg_url }}"
+    dest: "/home/{{ ansible_ssh_user }}/"
+    force: no
+    validate_certs: false
+
+- name: Unarchive the package
+  unarchive:
+    src: "/home/{{ ansible_ssh_user }}/{{ custom_service_filename }}"
+    dest: "/home/{{ ansible_ssh_user }}/"
+    copy: no
+
+- name: Prepare the service file in /etc/systemd/system/ folder
+  template:
+    src: "templates/{{ custom_service_name }}.service.j2"
+    dest: "/etc/systemd/system/{{ custom_service_name }}.service"
+    mode: 0644
+
+# reload and restart the custom service daemon via command
+# systemd ansible module not available for ansible < 2.2, therefore, using command module instead
+# For ansible version < 2.2, Ref: http://docs.ansible.com/ansible/latest/systemd_module.html
+- name: reload systemd unit configuration
+  command: systemctl daemon-reload
+  notify: restart {{ custom_service_name }}
