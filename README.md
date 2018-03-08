@@ -1,19 +1,18 @@
 ## Intro
-- Ubuntu 16.04 version using systemd as default initsystem
+- Ubuntu 16.04 version using systemd as default init system
 - Anything process you want to automatically start in Ubuntu 16.04 should use this role template
 - The service will be restart automatically if crashed or failure
 
 ## Commands
-- The service can be stop/start via command
-- Start and stop: 
+- The service can be stop/start via commands:
 ``` sh
-sudo service myservice start|stop|restart
+sudo service custom_service start|stop|restart
 ```
 - check status
 ``` sh
-sudo service myservice status
+sudo service custom_service status
 ```
-- Reload service config at /etc/systemd/system/
+- Reload service config at /etc/systemd/system/ if changed 
 ``` sh
 sudo systemctl daemon-reload
 ```
