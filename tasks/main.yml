@@ -17,11 +17,11 @@
   template:
     src: "templates/{{ custom_service_name }}.service.j2"
     dest: "/etc/systemd/system/{{ custom_service_name }}.service"
-    mode: 0644
+    mode: 0755
 
-# reload and restart the custom service daemon via command
+# reload and restart the custom service daemon
 # systemd ansible module not available for ansible < 2.2, therefore, using command module instead
-# For ansible version < 2.2, Ref: http://docs.ansible.com/ansible/latest/systemd_module.html
+# For ansible version < 2.2, ref to http://docs.ansible.com/ansible/latest/systemd_module.html
 - name: reload systemd unit configuration
   command: systemctl daemon-reload
   notify: restart {{ custom_service_name }}

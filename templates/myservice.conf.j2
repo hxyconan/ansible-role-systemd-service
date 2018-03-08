@@ -2,7 +2,7 @@
 # Ref: https://www.freedesktop.org/software/systemd/man/systemd.service.html
 
 [Unit]
-Description={{ custom_service_name }} as daemon service
+Description={{ custom_service_name }} daemon service
 
 [Service]
 User=root
@@ -10,6 +10,7 @@ Type=simple
 ExecStart={{ custom_service_install_home }}bin/{{ custom_service_name }} >> /var/log/{{ custom_service_name }}.log 2>&1
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -HUP $MAINPID
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
