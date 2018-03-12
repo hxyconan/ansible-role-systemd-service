@@ -13,15 +13,25 @@
     dest: "/home/{{ ansible_ssh_user }}/"
     copy: no
 
-- name: Prepare the service file in /etc/systemd/system/ folder
-  template:
-    src: "templates/{{ custom_service_name }}.service.j2"
-    dest: "/etc/systemd/system/{{ custom_service_name }}.service"
+
+# elasticsearch init scripts
+- file:
+    path: /usr/lib/systemd/system
+    state: directory
     mode: 0755
 
-# reload and restart the custom service daemon
+- name: Prepare the service init file in /usr/lib/systemd/system/ folder
+  template:
+    src: "templates/{{ custom_service_name }}.service.j2"
+    dest: "/usr/lib/systemd/system/{{ custom_service_name }}.service"
+    mode: 0755
+
+# this will enable automatic starting after a reboot by create few symlink
+- name: Make sure the service can be started after reboot
+  command: systemctl enable {{ custom_service_name }}.service
+
 # systemd ansible module not available for ansible < 2.2, therefore, using command module instead
-# For ansible version < 2.2, ref to http://docs.ansible.com/ansible/latest/systemd_module.html
-- name: reload systemd unit configuration
+- name: Reload and restart the elasticservice daemon via command
   command: systemctl daemon-reload
   notify: restart {{ custom_service_name }}
+
