@@ -14,7 +14,7 @@
     copy: no
 
 
-# elasticsearch init scripts
+# custom service init scripts
 - file:
     path: /usr/lib/systemd/system
     state: directory
@@ -31,7 +31,7 @@
   command: systemctl enable {{ custom_service_name }}.service
 
 # systemd ansible module not available for ansible < 2.2, therefore, using command module instead
-- name: Reload and restart the elasticservice daemon via command
+- name: Reload and restart the custom service daemon via command
   command: systemctl daemon-reload
   notify: restart {{ custom_service_name }}
 
