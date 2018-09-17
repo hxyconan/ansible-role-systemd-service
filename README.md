@@ -18,7 +18,7 @@ sudo systemctl enable SERVICENAME.service
 ```
 - Remove/Disable the service to system reboot auto-start services list
 ```sh
-sudo systemctl enable SERVICENAME.service
+sudo systemctl disable SERVICENAME.service
 ```
 - Check the service will be auto-started after system reboot
 ```sh

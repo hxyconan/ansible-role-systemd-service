@@ -1,37 +1,52 @@
 ---
 # Install a custom service
+- name: stat {{ custom_service_name }}
+  stat: path=/usr/local/bin/{{ custom_service_name }}
+  register: custom_service_bin
+
 - name: Download the package
   get_url:
     url: "{{ custom_service_pkg_url }}"
-    dest: "/home/{{ ansible_ssh_user }}/"
-    force: no
-    validate_certs: false
+    dest: /tmp/{{ custom_service_name }}.zip
+    mode: 0664
+  when: custom_service_bin.stat.exists == False
 
-- name: Unarchive the package
+- name: Unarchive the package to /usr/local/bin/
   unarchive:
-    src: "/home/{{ ansible_ssh_user }}/{{ custom_service_filename }}"
-    dest: "/home/{{ ansible_ssh_user }}/"
+    src: "/tmp/{{ custom_service_name }}.zip"
+    dest: "/usr/local/bin/"
     copy: no
+  when: custom_service_bin.stat.exists == False
 
 
-# custom service init scripts
+# prepare systemd init scripts
+- name: check if custom service enabled the auto-start for system reboot
+  command: systemctl is-enabled {{ custom_service_name }}.service
+  register: custom_service_autostart_stat
+  ignore_errors: yes
+
+- debug: msg="{{custom_service_autostart_stat.stdout}}"
+
 - file:
     path: /usr/lib/systemd/system
     state: directory
     mode: 0755
+  when: custom_service_autostart_stat.stdout != "enabled"
 
-- name: Prepare the service init file in /usr/lib/systemd/system/ folder
+- name: Prepare the custom service init file in /usr/lib/systemd/system/ folder
   template:
     src: "templates/{{ custom_service_name }}.service.j2"
     dest: "/usr/lib/systemd/system/{{ custom_service_name }}.service"
     mode: 0755
+  when: custom_service_autostart_stat.stdout != "enabled"
 
-# this will enable automatic starting after a reboot by create few symlink
-- name: Make sure the service can be started after reboot
+# this will enable automatic starting after a reboot via create few symlinks
+- name: Make sure the custom service can be started after reboot
   command: systemctl enable {{ custom_service_name }}.service
+  when: custom_service_autostart_stat.stdout != "enabled"
 
 # systemd ansible module not available for ansible < 2.2, therefore, using command module instead
-- name: Reload and restart the custom service daemon via command
+- name: Reload and restart the daemon via command
   command: systemctl daemon-reload
   notify: restart {{ custom_service_name }}
 

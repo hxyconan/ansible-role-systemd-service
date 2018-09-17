@@ -1,7 +1,4 @@
 ---
 # custom service install required variables
-custom_service_version: "1.2.3"
 custom_service_name: "WHATEVER-NAME"
-custom_service_filename: "{{ custom_service_service_name }}-{{ custom_service_version }}.tar.gz"
 custom_service_pkg_url: "https://DOWNLOADABLE_URL"
-custom_service_install_home: "/home/{{ ansible_ssh_user }}/{{ custom_service_name }}-{{ custom_service_version }}/"

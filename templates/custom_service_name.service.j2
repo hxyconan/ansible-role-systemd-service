@@ -7,7 +7,7 @@ Description={{ custom_service_name }} daemon service
 [Service]
 User=root
 Type=simple
-ExecStart={{ custom_service_install_home }}bin/{{ custom_service_name }} >> /var/log/{{ custom_service_name }}.log 2>&1
+ExecStart=/usr/local/bin/{{ custom_service_name }} >> /var/log/{{ custom_service_name }}.log 2>&1
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill -HUP $MAINPID
 Restart=on-failure
